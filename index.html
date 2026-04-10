@@ -1,0 +1,448 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Harvard Horse Puzzle · What's Your Type?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f2eee9;
+            font-family: 'Georgia', 'Times New Roman', Times, serif;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* main card */
+        .container {
+            max-width: 700px;
+            width: 100%;
+            margin: 20px auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* harvard visual area */
+        .harvard-header {
+            background: #A51C30;  /* Harvard crimson */
+            padding: 20px 24px 16px 24px;
+            color: white;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,240,0.2);
+            backdrop-filter: blur(2px);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+            font-family: monospace;
+            margin-bottom: 18px;
+        }
+
+        .harvard-header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .stats {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+
+        /* puzzle area */
+        .puzzle-card {
+            padding: 28px 24px 20px 24px;
+            background: #fffaf5;
+            border-bottom: 1px solid #e9e0d5;
+        }
+
+        .horse-timeline {
+            background: #f4efe8;
+            padding: 20px;
+            border-radius: 28px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: center;
+            color: #2c2b28;
+            margin-bottom: 24px;
+            font-family: 'Courier New', monospace;
+            box-shadow: inset 0 1px 3px #0001, 0 2px 4px #fff8;
+        }
+
+        .horse-timeline span {
+            font-weight: 700;
+            background: #fff0d4;
+            padding: 4px 10px;
+            border-radius: 40px;
+            margin: 0 2px;
+        }
+
+        .question {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 16px 0 8px;
+            text-align: center;
+            color: #2c241a;
+        }
+
+        .sub {
+            text-align: center;
+            color: #6b5a4a;
+            margin-bottom: 28px;
+            font-style: italic;
+        }
+
+        /* rationale input */
+        .rationale-area {
+            margin: 20px 0 12px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            color: #4a3b2c;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 16px;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            border: 1.5px solid #ddd2c4;
+            border-radius: 24px;
+            background: white;
+            resize: vertical;
+            transition: 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #A51C30;
+            box-shadow: 0 0 0 2px rgba(165,28,48,0.2);
+        }
+
+        button {
+            background: #2c3e2f;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 60px;
+            width: 100%;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        button:hover {
+            background: #1f2e21;
+            transform: scale(0.98);
+        }
+
+        .math-btn {
+            background: #b48c5c;
+            margin-top: 8px;
+        }
+
+        .math-btn:hover {
+            background: #9c744a;
+        }
+
+        /* result area */
+        .result-box {
+            background: #fef8ef;
+            margin: 16px 24px 24px 24px;
+            padding: 20px;
+            border-radius: 28px;
+            border-left: 8px solid #A51C30;
+            display: none;
+        }
+
+        .type-badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #A51C30;
+            font-weight: bold;
+        }
+
+        .type-name {
+            font-size: 1.9rem;
+            font-weight: 800;
+            margin: 8px 0 8px;
+            line-height: 1.2;
+        }
+
+        .type-desc {
+            color: #3e362e;
+            margin: 12px 0;
+            line-height: 1.4;
+        }
+
+        .share-text {
+            background: #e7dfd4;
+            padding: 12px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin: 12px 0;
+            word-break: break-word;
+        }
+
+        .reset-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.85rem;
+        }
+
+        .reset-link a {
+            color: #A51C30;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 20px 24px 24px;
+            color: #aa9f8f;
+            border-top: 1px solid #efe3d6;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <div class="harvard-header">
+        <div class="badge">HARVARD INTERVIEW · 20% CORRECT</div>
+        <h1>🐎 The Horse Trade Puzzle</h1>
+        <div class="stats">cognitive bias · decision logic · trader archetype</div>
+    </div>
+
+    <div class="puzzle-card">
+        <div class="horse-timeline">
+            BUY $60 → SELL $70 → BUY $80 → SELL $90
+        </div>
+        <div class="question">❓ How much profit did he make?</div>
+        <div class="sub">not a trick — just math & thinking style</div>
+
+        <div class="rationale-area">
+            <label>✍️ Type your reasoning (sentences, equation, whatever you thought)</label>
+            <textarea id="userRationale" rows="3" placeholder="e.g., (70-60)+(90-80) = $20 ... or 'he made $10 then lost $10' ... or 'started with $100, ended with $120'"></textarea>
+            <button id="analyzeBtn">✨ REVEAL MY TYPE ✨</button>
+            <button id="mathBtn" class="math-btn">📐 Show me the real math</button>
+        </div>
+    </div>
+
+    <div id="resultArea" class="result-box">
+        <div class="type-badge" id="resultBadge">YOUR ARCHETYPE</div>
+        <div class="type-name" id="resultType">—</div>
+        <div class="type-desc" id="resultDesc"></div>
+        <div class="share-text" id="shareText"></div>
+        <div class="reset-link"><a id="resetBtn">⟳ take the test again</a></div>
+    </div>
+    <footer>
+        one puzzle · 6 thinking styles · zero cost, pure fun
+    </footer>
+</div>
+
+<script>
+    // TYPE DEFINITIONS (keyword-based matching)
+    const types = [
+        {
+            id: "transactional_splitter",
+            name: "⚡ The Transactional Thinker",
+            badge: "CLEAN & MATHEMATICAL",
+            desc: "You see two independent trades: (70-60) + (90-80) = $20. No story, no regret — just arithmetic. Clear, fast, and correct. You’d make a sharp trader or engineer.",
+            keywords: ["(70-60)+(90-80)", "70-60)+(90-80", "10+10", "two separate", "two independent", "first trade $10", "second trade $10", "10 and 10", "add both profits"]
+        },
+        {
+            id: "accountant_cashflow",
+            name: "📒 The Accountant",
+            badge: "CASH FLOW MASTER",
+            desc: "You tracked net cash movement: start with X, end with X+$20. You ignore narrative, focus on money in vs out. Practical and audit-proof. You probably balance your budget weekly.",
+            keywords: ["cash flow", "started with", "net cash", "ended with", "$100", "start with $100", "cash position", "net profit $20", "X+20", "started with 100", "begin with $100"]
+        },
+        {
+            id: "straightforward_doer",
+            name: "🧠 The Straightforward Doer",
+            badge: "NO DRAMA",
+            desc: "You see two separate transactions: +$10 and +$10 = $20. You don’t overcomplicate. Quick, confident, and correct. You hate meetings that could have been emails.",
+            keywords: ["two trades", "$10 profit", "each trade", "bought and sold twice", "simple math", "just add", "obvious $20"]
+        },
+        {
+            id: "overthinker_10",
+            name: "🌀 The Overthinker",
+            badge: "WRONG · BUT FASCINATING",
+            desc: "You said $10. You probably thought: 'He made $10, then bought $10 higher, so that erased the first profit.' That’s a narrative trap — actual cash flow proves $20. You see stories where ledgers exist.",
+            keywords: ["$10", "ten dollars", "net $10", "only $10", "first $10 then lost", "bought higher", "lost the profit", "extra $10", "effectively $10", "net profit 10"]
+        },
+        {
+            id: "regretter",
+            name: "😔 The Regretter",
+            badge: "OPPORTUNITY COST TRAP",
+            desc: "You focus on what he 'should have done' (hold from $60 to $90 = $30). You might say he only made $10 or $20 feels wrong. But realized profit is $20 — don't let regret blind the actual gain.",
+            keywords: ["should have held", "opportunity cost", "only $10 if", "could have made", "missed profit", "if he just held", "hold from 60 to 90", "regret"]
+        },
+        {
+            id: "dreamer_30",
+            name: "☁️ The Dreamer",
+            badge: "BIG PICTURE · WRONG NUMBER",
+            desc: "You thought $30 — the difference between first buy and last sell. But you ignored the middle transactions. Visionary but scattered. Check the cash register next time!",
+            keywords: ["$30", "thirty", "60 to 90", "buy at 60 sell at 90", "30 dollars", "difference 60 to 90", "30 profit"]
+        }
+    ];
+
+    // helper: normalize text
+    function normalize(str) {
+        return str.toLowerCase().replace(/[^a-z0-9\+\-\=\(\)\$]/g, ' ').replace(/\s+/g, ' ');
+    }
+
+    function getTypeFromRationale(rationale) {
+        let text = rationale.toLowerCase();
+        let norm = normalize(rationale);
+        
+        // special case: if they explicitly mention $20 AND have correct equation vibe, but also avoid wrong ones
+        if ((text.includes("20") || text.includes("twenty")) && 
+            (text.includes("70-60") || text.includes("90-80") || text.includes("10+10") || text.includes("two trades"))) {
+            // likely correct, but prioritize transactional splitter
+            for (let t of types) {
+                if (t.id === "transactional_splitter") return t;
+            }
+        }
+        
+        // check for $10 wrong answer first (overthinker)
+        if ((text.includes("$10") || text.includes("ten dollars") || text.includes("net 10")) && 
+            (text.includes("lost") || text.includes("bought higher") || text.includes("extra") || text.includes("only $10"))) {
+            return types.find(t => t.id === "overthinker_10") || types[3];
+        }
+        
+        // explicit $10 without correct positive split
+        if ((text.includes("$10") || text.includes("ten dollars")) && !(text.includes("20") || text.includes("twenty"))) {
+            return types.find(t => t.id === "overthinker_10") || types[3];
+        }
+        
+        // $30 dreamer
+        if ((text.includes("$30") || text.includes("thirty")) && !text.includes("20")) {
+            return types.find(t => t.id === "dreamer_30") || types[5];
+        }
+        
+        // regretter keywords
+        for (let kw of types.find(t => t.id === "regretter").keywords) {
+            if (text.includes(kw.toLowerCase())) return types.find(t => t.id === "regretter");
+        }
+        
+        // cash flow / accountant
+        for (let kw of types.find(t => t.id === "accountant_cashflow").keywords) {
+            if (text.includes(kw.toLowerCase()) || norm.includes(kw.toLowerCase())) return types.find(t => t.id === "accountant_cashflow");
+        }
+        
+        // transactional splitter: looks for equation or explicit add
+        for (let kw of types.find(t => t.id === "transactional_splitter").keywords) {
+            if (text.includes(kw.toLowerCase()) || norm.includes(kw.toLowerCase())) return types.find(t => t.id === "transactional_splitter");
+        }
+        
+        // straightforward doer: general correct but simple wording
+        for (let kw of types.find(t => t.id === "straightforward_doer").keywords) {
+            if (text.includes(kw.toLowerCase())) return types.find(t => t.id === "straightforward_doer");
+        }
+        
+        // if they wrote $20 without specific keywords, assume straightforward
+        if (text.includes("$20") || text.includes("twenty")) {
+            return types.find(t => t.id === "straightforward_doer");
+        }
+        
+        // default: if nothing matches but wrong number - overthinker
+        if (text.includes("$0") || text.includes("zero") || (text.match(/\d+/) && !text.includes("20"))) {
+            return types.find(t => t.id === "overthinker_10");
+        }
+        
+        // fallback for random input -> Overthinker as default
+        return types.find(t => t.id === "overthinker_10");
+    }
+
+    function displayResult(typeObj, rationaleText) {
+        const resultDiv = document.getElementById("resultArea");
+        document.getElementById("resultBadge").innerText = typeObj.badge;
+        document.getElementById("resultType").innerHTML = typeObj.name;
+        document.getElementById("resultDesc").innerHTML = typeObj.desc;
+        
+        let shortRationale = rationaleText.length > 80 ? rationaleText.substring(0, 77) + "..." : rationaleText;
+        let shareMsg = `🧠 Harvard Horse Puzzle → I am "${typeObj.name}".\nMy reasoning: "${shortRationale}"\n\nWhat’s your trading type? Take the test → (copy this file)`;
+        document.getElementById("shareText").innerHTML = `📤 copy this: “${shareMsg}” <span style="cursor:pointer;color:#A51C30;" id="copyShareBtn">[Copy]</span>`;
+        
+        resultDiv.style.display = "block";
+        document.getElementById("copyShareBtn").onclick = () => {
+            navigator.clipboard.writeText(shareMsg);
+            alert("📋 Copied! Share with friends.");
+        };
+        
+        // smooth scroll
+        resultDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function showMathExplanation() {
+        const resultDiv = document.getElementById("resultArea");
+        document.getElementById("resultBadge").innerText = "📐 REAL MATH";
+        document.getElementById("resultType").innerHTML = "✅ $20 PROOF";
+        document.getElementById("resultDesc").innerHTML = `Method 1 (Two trades): (70-60) + (90-80) = $10 + $10 = $20.<br><br>
+        Method 2 (Cash flow): Start with $X → after all buys/sells: X -60 +70 -80 +90 = X + $20.<br><br>
+        Method 3 (Concrete): Start $100 → $40 → $110 → $30 → $120. Profit $20.<br><br>
+        <strong>Answer is $20. No trick.</strong>`;
+        document.getElementById("shareText").innerHTML = `📐 The math is clean: two $10 profits = $20 total. Cash never lies.`;
+        resultDiv.style.display = "block";
+        resultDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const mathBtn = document.getElementById("mathBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const rationaleInput = document.getElementById("userRationale");
+    const resultDiv = document.getElementById("resultArea");
+
+    analyzeBtn.addEventListener("click", () => {
+        let rationale = rationaleInput.value.trim();
+        if (rationale === "") {
+            alert("✍️ Please type your reasoning first — even just a number or equation!");
+            return;
+        }
+        const matchedType = getTypeFromRationale(rationale);
+        displayResult(matchedType, rationale);
+    });
+
+    mathBtn.addEventListener("click", () => {
+        showMathExplanation();
+    });
+
+    resetBtn.addEventListener("click", () => {
+        rationaleInput.value = "";
+        resultDiv.style.display = "none";
+        rationaleInput.focus();
+    });
+</script>
+</body>
+</html>
